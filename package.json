@@ -1,0 +1,14 @@
+{
+  "name": "reviewers",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "2.5.9"
+  },
+  "subdomain": "reviewers",
+  "scripts": {
+    "start": "server.js"
+  },
+  "engines": {
+    "node": "0.6.x"
+  }
+}
