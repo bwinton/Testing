@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.css"/>
+    <script src="https://browserid.org/include.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <!-- For local use:
+    <script src="js/browseridjs"></script>
+    <script src="js/jquery-1.7.2.min.js"></script>
+    -->
+    <title>Hello.</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero-unit">
+        <h1>Hello.</h1>
+        <p>
+        <% if (email) { %>
+          Hello <%= email %>!
+        <% } else { %>
+          <a class="btn btn-primary" href="#" id="browserid-login"><i class="icon-user icon-white"></i> Click here to log in.</a>
+        <% } %>
+      </div>
+      Value is <%= value %>.
+    </div>
+  </body>
+  <script src="browserid/js/browserid-helper.js"></script>
+</html>

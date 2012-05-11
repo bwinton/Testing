@@ -1,13 +1,30 @@
-var express = require('express');
-var redis = require('redis-url').connect(process.env.REDISTOGO_URL);
+var express = require("express");
+var redis = require("redis-url").connect(process.env.REDISTOGO_URL);
+var browserid = require("express-browserid");
+var ejs = require("ejs");
 
-redis.set('foo', 'bar');
+
+redis.set("foo", "bar");
 
 var app = express.createServer(express.logger());
 
-app.get('/', function(request, response) {
+app.configure(function() {
+  app.use(express.bodyParser());
+  app.use(express.cookieParser());
+  app.use(express.session({ secret: "horse ebooks" }));
+  app.use(app.router);
+  app.use(express.static(__dirname + "/public"));
+  app.set("views", __dirname + "/templates/");
+  app.set("view options", {layout: false});
+  app.register(".html", ejs);
+  browserid.plugAll(app);
+});
+
+app.get('/', function(req, res) {
   redis.get('foo', function(err, value) {
-    response.send('Hello World!<br>foo is: ' + value);
+    res.render("index.html",
+               {"email": req.session.email,
+                "value": value});
   });
 });
 
