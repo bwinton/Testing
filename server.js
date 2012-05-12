@@ -1,5 +1,6 @@
 var express = require("express");
 var redis = require("redis-url").connect(process.env.REDISTOGO_URL);
+var RedisStore = require('connect-redis')(express);
 var browserid = require("express-browserid");
 var ejs = require("ejs");
 
@@ -11,7 +12,9 @@ var app = express.createServer(express.logger());
 app.configure(function() {
   app.use(express.bodyParser());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: "horse ebooks" }));
+  app.use(express.session({
+    secret: process.env.SESSION_SECRET,
+    store: new RedisStore({client:redis})}));
   app.use(app.router);
   app.use(express.static(__dirname + "/public"));
   app.set("views", __dirname + "/templates/");
@@ -30,5 +33,5 @@ app.get('/', function(req, res) {
 
 var port = process.env.PORT || 3000;
 app.listen(port, function() {
-  console.log("Listening on " + port);
+  console.log("Listening on http://localhost:" + port + "/");
 });
