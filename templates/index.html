@@ -17,12 +17,16 @@
         <p>
         <% if (email) { %>
           Hello <%= email %>!
+          <a class="btn" href="#" id="browserid-logout"><i class="icon-user"></i>Logout</a>
         <% } else { %>
-          <a class="btn btn-primary" href="#" id="browserid-login"><i class="icon-user icon-white"></i> Click here to log in.</a>
+          <a data-audience="http://reviewers.jit.su/" href="#" id="browserid-login"><img src="img/sign_in_blue.png"></a>
         <% } %>
       </div>
-      Value is <%= value %>.
+      <% if (email == "bwinton@mozilla.com") { %>
+        Value is <%= value %>.
+      <% } %>
     </div>
   </body>
   <script src="browserid/js/browserid-helper.js"></script>
+  <script src="js/browserid-logout.js"></script>
 </html>
