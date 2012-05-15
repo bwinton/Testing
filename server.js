@@ -10,7 +10,7 @@ redis.set("foo", "bar");
 var app = express.createServer(express.logger());
 
 app.configure(function() {
-  app.use(express.bodyParser({uploadDir:"./uploads"}));
+  app.use(express.bodyParser());
   app.use(express.cookieParser());
   app.use(express.session({
     secret: process.env.SESSION_SECRET || "horse ebooks",
