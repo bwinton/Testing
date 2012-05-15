@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.css"/>
+    <script src="https://browserid.org/include.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <!-- For local use:
+    <script src="js/browseridjs"></script>
+    <script src="js/jquery-1.7.2.min.js"></script>
+    -->
+    <title>Hello.</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero-unit">
+        <h1>Update revision data.</h1>
+      </div>
+      <form class="form-inline"
+            action="/update"
+            method="post"
+            enctype="multipart/form-data">
+        <div class="control-group">
+          <label class="control-lable" for="name">Name:</label>
+          <input id="name" name="name">
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="fileInput">Data:</label>
+          <input class="input-file" id="fileInput" type="file" name="data">
+        </div>
+        <INPUT type="submit" value="Update">
+      </form>
+    </div>
+  </body>
+  <script src="browserid/js/browserid-helper.js"></script>
+  <script src="js/browserid-logout.js"></script>
+</html>
