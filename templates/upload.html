@@ -15,17 +15,20 @@
       <div class="hero-unit">
         <h1>Update revision data.</h1>
       </div>
+      <% if (status == "success") { %>
+        <div>Thank you for your submission.</div>
+      <% } %>
       <form class="form-inline"
             action="/update"
             method="post"
             enctype="multipart/form-data">
         <div class="control-group">
-          <label class="control-lable" for="name">Name:</label>
+          <label class="control-label" for="name">Name:</label>
           <input id="name" name="name">
         </div>
         <div class="control-group">
           <label class="control-label" for="fileInput">Data:</label>
-          <input class="input-file" id="fileInput" type="file" name="data">
+          <input id="url" name="url">
         </div>
         <INPUT type="submit" value="Update">
       </form>

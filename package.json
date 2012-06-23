@@ -1,17 +1,18 @@
 {
   "name": "reviewers",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "dependencies": {
+    "connect-mongodb": "1.1.4",
     "express": "2.5.9",
-    "connect-redis": "1.3.0",
-    "redis-url": "0.1.0",
-    "redis": "0.7.x",
     "ejs": "0.7.1",
-    "express-browserid": "0.0.2"
+    "express-browserid": "0.0.2",
+    "jspack": "0.0.1",
+    "mongojs": "0.4.3"
   },
   "subdomain": "reviewers",
   "scripts": {
-    "start": "server.js"
+    "start": "node server.js",
+    "test": "node test-hg.js"
   },
   "engines": {
     "node": "0.6.x"

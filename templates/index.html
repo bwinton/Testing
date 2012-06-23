@@ -26,11 +26,6 @@
             action="/patch"
             method="post"
             enctype="multipart/form-data">
-        <select name="name">
-          <% for(var i = 0; i < repos.length; i++) {%>
-             <option><%= repos[i] %></option>
-          <% } %>
-        </select>
         <div class="control-group">
           <label class="control-label" for="fileInput">Patch:</label>
           <input class="input-file" id="fileInput" type="file" name="patch">

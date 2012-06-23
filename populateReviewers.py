@@ -56,7 +56,23 @@ def main(argv=None):
       for person in (canon(x) for x in uisuckerRe.findall(change.description())):
         postval[file]["ui-reviewers"][person] = postval[file]["ui-reviewers"].setdefault(person, 0) + 1
 
-  print json.dumps(postval)
+  print len(postval)
+  size = len(postval) / 15
+  curr = {}
+  index = 0
+  while len(postval):
+    curr.clear()
+    index += 1
+    for i in xrange(size):
+      try:
+        item = postval.popitem()
+        curr[item[0]] = item[1]
+      except KeyError:
+        break
+    print "Writing "+str(len(curr))+" keys to "+argv[1]+str(index)+".json"
+    f = open(argv[1] + str(index) + ".json", "w")
+    f.write(json.dumps(curr))
+    f.close()
   return 0
 
 if __name__ == "__main__":

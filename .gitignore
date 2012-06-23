@@ -1,3 +1,5 @@
 node_modules
 testdata
 uploads
+npm-debug.log
+test.py
