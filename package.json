@@ -2,6 +2,7 @@
   "name": "reviewers",
   "version": "0.0.11",
   "dependencies": {
+    "buffered-reader": "0.2.3",
     "connect-mongodb": "1.1.4",
     "express": "2.5.9",
     "ejs": "0.7.1",

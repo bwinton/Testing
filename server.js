@@ -1,3 +1,4 @@
+var BufferedReader = require('buffered-reader');
 var browserid = require('express-browserid');
 var ejs = require('ejs');
 var express = require('express');
@@ -75,9 +76,12 @@ app.post("/update", function(req, res) {
     fs.unlink(data_path, function(err) {
       if (err) throw err;
     });
-    data = JSON.parse(contents);
-    for (var key in data) {
-      var file = data[key];
+
+    new BufferedReader(contents, {encoding: "utf8"}).on("error", function(error){
+        console.log(error);
+    }).on("line", function(line){
+      console.log("line: " + line);
+      data = JSON.parse(line);
       // Update the mongo record here.
       // db.files.save(file, function(err, saved) {
       // OR!!!
@@ -85,7 +89,9 @@ app.post("/update", function(req, res) {
       //   if (err) throw err;
       //   if (!saved) console.log("File "+filename+" not updated");
       // });
-    };
+    }).on("end", function (){
+      console.log("EOF");
+    }).read();
   });
 });
 
