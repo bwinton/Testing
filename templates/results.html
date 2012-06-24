@@ -15,15 +15,19 @@
       <div class="hero-unit">
         <h1>Who's reviewing my patches?</h1>
       </div>
-      <% for(var i = 0; i < all.length; i++) {%>
-        <% var title = all[i][0] %>
-        <% var data = all[i][1] %>
+      <% for (var i in headings) { %>
+        <% var title = headings[i].title %>
+        <% var key = headings[i].key %>
         <div>
-          <h3><%= title %>:</h3>
-          <% for(var j = 0; j < data.length; j++) {%>
-            <% var reviewCount = data[j][0] %>
-            <% var person = data[j][1] %>
-            <%= person %> (<%= reviewCount %> reviews)<br>
+          <% if (Object.keys(data[key]).length) {%>
+            <h3><%= title %>:</h3>
+              <% for (j in data[key]) { %>
+              <% var reviewCount = data[key][j].count %>
+              <% var person = data[key][j].person %>
+              <%= person %> (<%= reviewCount %> reviews)<br>
+            <% } %>
+          <% } else { %>
+            <h3>No <%= title%> Found.</h3>
           <% } %>
         </div>
       <% } %>

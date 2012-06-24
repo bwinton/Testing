@@ -9,13 +9,18 @@ var MongoStore = require('connect-mongodb');
 var app = express.createServer(express.logger());
 
 var collections = ["files"];
-var db = mongo.connect(process.env.MONGODB_URL, collections);
+var db = mongo.connect(process.env.MONGODB_URL || "test", collections);
+
+var headings = [
+  {title:"UI-Reviewers", key:"ui-reviewers"},
+  {title:"Reviewers", key:"reviewers"},
+  {title:"Super-Reviewers", key:"super-reviewers"}
+];
 
 app.configure(function() {
   app.use(express.bodyParser());
   app.use(express.cookieParser());
   var store = new MongoStore({db:db.client});
-  console.log(store);
   app.use(express.session({
     secret: process.env.SESSION_SECRET || "horse ebooks",
     store: store}));
@@ -46,15 +51,25 @@ app.post("/patch", function(req, res) {
     matches = matches.map(function(m) {
       return m.replace(/^\+\+\+ (b\/)?/, "");
     });
-    console.log(matches);
-    db.files.find({name: {$in:matches}}, function(err, files) {
-      console.log(err, files);
+    data = {};
+    db.files.group([], {name: {$in:matches}}, {}, function(obj, prev){
+      for (key in obj) {
+        prev[key] = obj[key];
+      }
+    }, function(err, files) {
+      data = {"reviewers": [], "ui-reviewers": [], "super-reviewers": [] };
       if (err) throw err;
       if (!files || !files.length) console.log("No files found");
-      else files.forEach( function(file) {
-        console.log(file);
-      });
-      res.render("results.html", {"all": files});
+      else {
+        files = files[0];
+        for (key in data) {
+          for (person in files[key]) {
+            data[key].push({person: person, count:files[key][person]});            
+          }
+          data[key] = data[key].sort(function(a,b){return b.count - a.count});
+        }
+      }
+      res.render("results.html", {"headings":headings, "data": data});
     });
   });
 });
@@ -70,29 +85,23 @@ app.get("/update", function(req, res) {
 app.post("/update", function(req, res) {
   res.send("Thanks!");
   var data_path = req.files.data.path;
-  fs.readFile(data_path, function(err, contents) {
-    if (err) throw err;
+
+  new BufferedReader(data_path, {encoding: "utf8"}).on("error", function(error){
+      console.log(error);
+  }).on("line", function(line){
+    data = JSON.parse(line);
+    // Update the mongo record here.
+    db.files.insert(data, function(err, saved) {
+     if (err) throw err;
+     if (!saved) console.log("File "+data.name+" not updated");
+   });
+  }).on("end", function (){
+    console.log("EOF for "+data_path);
     // delete the temp file.
     fs.unlink(data_path, function(err) {
       if (err) throw err;
     });
-
-    new BufferedReader(contents, {encoding: "utf8"}).on("error", function(error){
-        console.log(error);
-    }).on("line", function(line){
-      console.log("line: " + line);
-      data = JSON.parse(line);
-      // Update the mongo record here.
-      // db.files.save(file, function(err, saved) {
-      // OR!!!
-      // db.users.update({name: filename}, {$inc: {user: 1}}, function(err, updated) {
-      //   if (err) throw err;
-      //   if (!saved) console.log("File "+filename+" not updated");
-      // });
-    }).on("end", function (){
-      console.log("EOF");
-    }).read();
-  });
+  }).read();
 });
 
 var port = process.env.PORT || 3000;
