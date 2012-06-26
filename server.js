@@ -8,8 +8,14 @@ var MongoStore = require('connect-mongodb');
 
 var app = express.createServer(express.logger());
 
+
+var services = JSON.parse(process.env.VCAP_SERVICES);
+var mongo_data = services["mongodb-1.8"][0].credentials;
+var mongo_url = "mongodb://" + mongo_data.username + ":" + mongo_data.password +
+                "@" + mongo_data.host + ":" + mongo_data.port + "/" + mongo_data.db;
+
 var collections = ["files"];
-var db = mongo.connect(process.env.MONGODB_URL || "test", collections);
+var db = mongo.connect(mongo_url, collections);
 
 var headings = [
   {title:"UI-Reviewers", key:"ui-reviewers"},
