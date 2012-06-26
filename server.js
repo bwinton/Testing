@@ -8,6 +8,24 @@ var MongoStore = require('connect-mongodb');
 
 var app = express.createServer(express.logger());
 
+/* {
+  "VCAP_APP_HOST":"10.22.112.136",
+  "VCAP_APP_PORT":"41201",
+  "VCAP_APPLICATION":"{\"instance_id\":\"94456182bfd8b117ad47015f6993391d\",\"instance_index\":0,\"name\":\"reviewers\",\"uris\":[\"reviewers.vcap.mozillalabs.com\"],\"users\":[\"bwinton@mozilla.com\"],\"version\":\"2a547782f73f8be4e01ae716ea8ae5ec2893c42c-1\",\"start\":\"2012-06-26 11:14:20 -0700\",\"runtime\":\"node\",\"state_timestamp\":1340734460,\"port\":41201,\"limits\":{\"fds\":256,\"mem\":67108864,\"disk\":2147483648},\"host\":\"10.22.112.136\"}",
+  "VCAP_DEBUG_IP":"",
+  "VCAP_DEBUG_PORT":"",
+  "VCAP_SERVICES":"{\"mongodb-1.8\":[{\"name\":\"reviewers-mongo\",\"label\":\"mongodb-1.8\",\"plan\":\"free\",\"tags\":[\"mongodb\",\"mongodb-1.6\",\"nosql\"],\"credentials\":{\"hostname\":\"10.22.112.137\",\"host\":\"10.22.112.137\",\"port\":25004,\"username\":\"68e21404-8e9c-4923-941f-9ce31ca713cd\",\"password\":\"7d8b7f6b-45e4-46c3-bad3-fb65f11a5945\",\"name\":\"2a999aaf-ec17-4ef5-bfa9-c45e3f0454c8\",\"db\":\"db\"}}]}",
+  "VMC_APP_HOST":"10.22.112.136",
+  "VMC_APP_ID":"94456182bfd8b117ad47015f6993391d",
+  "VMC_APP_INSTANCE":"{\"droplet_id\":132,\"instance_id\":\"94456182bfd8b117ad47015f6993391d\",\"instance_index\":0,\"name\":\"reviewers\",\"dir\":\"/var/vcap.local/dea/apps/reviewers-0-94456182bfd8b117ad47015f6993391d\",\"uris\":[\"reviewers.vcap.mozillalabs.com\"],\"users\":[\"bwinton@mozilla.com\"],\"version\":\"2a547782f73f8be4e01ae716ea8ae5ec2893c42c-1\",\"mem_quota\":67108864,\"disk_quota\":2147483648,\"fds_quota\":256,\"state\":\"STARTING\",\"runtime\":\"node\",\"framework\":\"node\",\"start\":\"2012-06-26 11:14:20 -0700\",\"state_timestamp\":1340734460,\"log_id\":\"(name=reviewers app_id=132 instance=94456182bfd8b117ad47015f6993391d index=0)\",\"resources_tracked\":true,\"port\":41201}",
+  "VMC_APP_NAME":"reviewers",
+  "VMC_APP_PORT":"41201",
+  "VMC_APP_VERSION":"2a547782f73f8be4e01ae716ea8ae5ec2893c42c-1",
+  "VMC_MONGODB":"10.22.112.137:25004",
+  "VMC_SERVICES":"[{\"name\":\"reviewers-mongo\",\"type\":\"key-value\",\"vendor\":\"mongodb\",\"version\":\"1.8\",\"tier\":\"free\",\"options\":{\"hostname\":\"10.22.112.137\",\"host\":\"10.22.112.137\",\"port\":25004,\"username\":\"68e21404-8e9c-4923-941f-9ce31ca713cd\",\"password\":\"7d8b7f6b-45e4-46c3-bad3-fb65f11a5945\",\"name\":\"2a999aaf-ec17-4ef5-bfa9-c45e3f0454c8\",\"db\":\"db\"}}]",
+  "VMC_WARNING_WARNING":"All VMC_* environment variables are deprecated, please use VCAP_* versions.",
+} */
+
 
 var services = JSON.parse(process.env.VCAP_SERVICES);
 var mongo_data = services["mongodb-1.8"][0].credentials;
@@ -110,7 +128,9 @@ app.post("/update", function(req, res) {
   }).read();
 });
 
-var port = process.env.PORT || 3000;
-app.listen(port, function() {
-  console.log("Listening on http://localhost:" + port + "/");
+const PORT = process.env.PORT || process.env.VCAP_APP_PORT || 3000;
+const HOST = process.env.IP_ADDRESS || process.env.VCAP_APP_HOST || '127.0.0.1';
+
+app.listen(PORT, HOST, function() {
+  console.log("Listening on http://" + HOST + ":" + PORT + "/");
 });
